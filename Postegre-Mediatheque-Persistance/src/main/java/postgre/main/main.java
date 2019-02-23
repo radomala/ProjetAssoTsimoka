@@ -90,7 +90,7 @@ public class main {
 			
 			*/
 			//Media media= new Media();
-			//mediamedia.isexistMedia("media");
+			mediamedia.isexistMedia("media");
 		
 		} catch (HibernateException e) {
 			e.printStackTrace();
