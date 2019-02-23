@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
@@ -11,9 +9,9 @@
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="org.postgresql.Driver" />
-		<property name="url" value="jdbc:postgresql://localhost:5432/Mediatheque" />
+		<property name="url" value="jdbc:postgresql://localhost:5432/BDGestionFormulaire" />
 		<property name="username" value="postgres" />
-		<property name="password" value="radomalala" />
+		<property name="password" value="admin" />
 		<property name="initialSize" value="5" />
 		<property name="maxActive" value="20" />
 	</bean>
@@ -35,10 +33,27 @@
 		</property>
 	</bean>
 
+	<bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
+		<property name="dataSource" ref="dataSource" />
+		<property name="changeLog" value="/db/changelog-master.xm" />
+
+		<!-- contexts specifies the runtime contexts to use. -->
+		<!-- <property name="contexts" value="test, production" /> -->
+	</bean>
+	
+	
+	
+	<!-- <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
+		<property name="dataSource" ref="DataSource" />
+		<property name="changeLog" value="src/main/java/de/twt_gmbh/spring4/database-changelog-master.xml" />
+	</bean>
+	 -->
+	
+	
 
 	<!-- ********BEANS DAO********** -->
 
-	<bean id="iMembreDao" class="postgre.mediatheque.entiteDao.MembreDaoImpl">
+	<bean id="iRubriqueDao" class="postgre.mediatheque.entiteDao.RubriqueImpl">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
 	<bean id="iMediaDao" class="postgre.mediatheque.entiteDao.MediaDaoImpl">
@@ -56,6 +71,7 @@
 
 	<!-- ********BEANS METIER********** -->
 
+    
 
 	<bean id="iMembreMetier" class="postgre.mediatheque.metier.MembreMetierImpl">
 		<property name="iMembreDao" ref="iMembreDao"></property>
@@ -70,12 +86,11 @@
 	<bean id="iUsers_rolesMetier" class="postgre.mediatheque.metier.Users_rolesMetierImpl">
 		<property name="iUsers_rolesDao" ref="iUsers_rolesDao"></property>
 	</bean>
-	
-	<bean id="iStockFilesMetier"
-		class="postgre.mediatheque.metier.StockFilesMetierImpl">
+
+	<bean id="iStockFilesMetier" class="postgre.mediatheque.metier.StockFilesMetierImpl">
 		<property name="iStockFilesDao" ref="iStockFilesDao"></property>
 	</bean>
-	
+
 
 	<!-- ********BEANS TRANSACTION ANDDRIVEN********** -->
 	<bean id="transactionManager"
@@ -85,6 +100,6 @@
 	<tx:annotation-driven />
 
 
-	
+
 </beans>
 
