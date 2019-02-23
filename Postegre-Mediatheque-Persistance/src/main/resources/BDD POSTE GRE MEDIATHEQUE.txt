@@ -1,0 +1,94 @@
+CREATE TABLE MEDIA (
+    REFERENCE VARCHAR(20) primary key ,
+    TITRE VARCHAR(20),
+    TYPE VARCHAR(5),
+    AUTEUR VARCHAR(20),
+    EDITEUR VARCHAR(20)
+    );
+CREATE TABLE STOCK (
+    STOCK_ID INTEGER primary key,
+    REFERENCE VARCHAR(20),
+    QUANTITE numeric
+    );
+
+CREATE TABLE stock_files (
+upload_id Serial primary key,
+REFERENCE VARCHAR(20),
+name_repertoire VARCHAR(200)
+);
+
+alter table stock add foreign key (REFERENCE) references media;
+alter table stock_files add foreign key (REFERENCE) references media;
+
+CREATE TABLE EMPRUNTER (
+    EMPRUNTER_ID INTEGER primary key,
+    REFERENCE VARCHAR(20),
+    MAIL VARCHAR(200),
+    DATE_EMPRUNT DATE,
+    DATE_LIMITE DATE,
+    DATE_RETOUR DATE,
+    QUANTITE numeric,
+    TOTAL numeric
+);
+
+DROP TABLE MEMBRE;
+CREATE TABLE MEMBRE (
+    MAIL VARCHAR(200) primary key,
+    MOT_DE_PASSE VARCHAR(200),
+    NOM VARCHAR(200),
+    STATUS VARCHAR(200),
+    CODESTATUS VARCHAR(200),
+    ADRESSE VARCHAR(200)
+);
+CREATE TABLE GROUPES (
+    GROUPE VARCHAR(200),
+    MAIL VARCHAR(200),
+    primary key(GROUPE,MAIL)
+);
+
+CREATE TABLE USER_ROLES (
+    ID_ROLE_USER Serial primary key,
+    MAIL VARCHAR(200),
+    AUTHORITY VARCHAR(200)
+);
+
+
+
+alter table USER_ROLES add foreign key (MAIL) references membre;
+
+alter table emprunter add foreign key (REFERENCE) references media;
+alter table emprunter add foreign key (MAIL) references membre;
+
+
+INSERT INTO media (REFERENCE,TITRE,TYPE,AUTEUR) VALUES ('1', 'Le monde s effondre', 'Livre','Chinus achebas');
+INSERT INTO media (REFERENCE,TITRE,TYPE,AUTEUR) VALUES ('2', 'Contes', 'CD','Tabera');
+INSERT INTO media (REFERENCE,TITRE,TYPE,AUTEUR) VALUES ('3', 'Orgeuil et prejuge', 'CD','Roudi Garcia');
+INSERT INTO media (REFERENCE,TITRE,TYPE,AUTEUR) VALUES ('4', 'Le Pere Gorlot', 'DVD','Fotier Lorris');
+INSERT INTO media (REFERENCE,TITRE,TYPE,AUTEUR) VALUES ('5', 'Decameron', 'DVD','Lila Maux');
+INSERT INTO media (REFERENCE,TITRE,TYPE,AUTEUR) VALUES ('6', 'L etranger', 'CD','Steph Driss');
+INSERT INTO media (REFERENCE,TITRE,TYPE,AUTEUR) VALUES ('7', 'Les demons', 'Livre','Louris Blenda');
+INSERT INTO media (REFERENCE,TITRE,TYPE,AUTEUR) VALUES ('8', 'Le bruit', 'CD','Thiago Motta');
+INSERT INTO media (REFERENCE,TITRE,TYPE,AUTEUR) VALUES ('9', 'Faust', 'CD','Veratti Bag');
+
+
+INSERT INTO MEMBRE (MAIL,MOT_DE_PASSE,NOM,PHONE,SEXE,ADRESSE) VALUES ('rado.ran@lipn-paris13.fr','rado','Rado','0778989878','H','12 rue Texas');
+INSERT INTO MEMBRE (MAIL,MOT_DE_PASSE,NOM,PHONE,SEXE,ADRESSE) VALUES ('rita.ran@lipn-paris13.fr','rita','Rita','0678989878','F','34 rue Texas');
+INSERT INTO MEMBRE (MAIL,MOT_DE_PASSE,NOM,PHONE,SEXE,ADRESSE) VALUES ('fortier.for@lipn-paris13.fr','fortier','Fortier','0778989878','H','34 rue Miami' );
+INSERT INTO MEMBRE (MAIL,MOT_DE_PASSE,NOM,PHONE,SEXE,ADRESSE) VALUES ('dede.ran@lipn-paris13.fr','dede', 'Dede', '0778989878','H','34 rue Grenoble');
+INSERT INTO MEMBRE (MAIL,MOT_DE_PASSE,NOM,PHONE,SEXE,ADRESSE) VALUES ('andre.ran@lipn-paris13.fr','andre', 'Andre','0678949878','F','34 rue Miami');
+
+
+INSERT INTO MEMBRE (GROUPE,MAIL) VALUES ('admin','rado.ran@lipn-paris13.fr');
+INSERT INTO MEMBRE (GROUPE,MAIL) VALUES ('admin','rita.ran@lipn-paris13.fr');
+INSERT INTO MEMBRE (GROUPE,MAIL) VALUES ('user','fortier.for@lipn-paris13.fr');
+INSERT INTO MEMBRE (GROUPE,MAIL) VALUES ('user','dede.ran@lipn-paris13.fr');
+INSERT INTO MEMBRE (GROUPE,MAIL) VALUES ('empl','andre.ran@lipn-paris13.fr');
+
+{
+	"mail":"radomalalalalalalal@alteca.fr",
+	"motdepasse":"1234",
+	"nom":"radomalala",
+	"phone":"1234567",
+	"sexe":"M",
+	"adresse":"ffgfdgdfgf"
+}

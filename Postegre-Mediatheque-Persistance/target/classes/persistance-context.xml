@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="org.postgresql.Driver" />
+		<property name="url" value="jdbc:postgresql://localhost:5432/Mediatheque" />
+		<property name="username" value="postgres" />
+		<property name="password" value="radomalala" />
+		<property name="initialSize" value="5" />
+		<property name="maxActive" value="20" />
+	</bean>
+
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan">
+			<list>
+				<value>postgre.mediatheque.entite</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+
+
+	<!-- ********BEANS DAO********** -->
+
+	<bean id="iMembreDao" class="postgre.mediatheque.entiteDao.MembreDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="iMediaDao" class="postgre.mediatheque.entiteDao.MediaDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+	<bean id="iUsers_rolesDao" class="postgre.mediatheque.entiteDao.Users_rolesDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+	<bean id="iStockFilesDao" class="postgre.mediatheque.entiteDao.StockFilesDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+
+	<!-- ********BEANS METIER********** -->
+
+
+	<bean id="iMembreMetier" class="postgre.mediatheque.metier.MembreMetierImpl">
+		<property name="iMembreDao" ref="iMembreDao"></property>
+		<property name="iUsers_rolesDao" ref="iUsers_rolesDao"></property>
+	</bean>
+
+	<bean id="iMediaMetier" class="postgre.mediatheque.metier.MediaMetierImpl">
+		<property name="iMediaDao" ref="iMediaDao"></property>
+		<property name="iStockFilesDao" ref="iStockFilesDao"></property>
+	</bean>
+
+	<bean id="iUsers_rolesMetier" class="postgre.mediatheque.metier.Users_rolesMetierImpl">
+		<property name="iUsers_rolesDao" ref="iUsers_rolesDao"></property>
+	</bean>
+	
+	<bean id="iStockFilesMetier"
+		class="postgre.mediatheque.metier.StockFilesMetierImpl">
+		<property name="iStockFilesDao" ref="iStockFilesDao"></property>
+	</bean>
+	
+
+	<!-- ********BEANS TRANSACTION ANDDRIVEN********** -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<tx:annotation-driven />
+
+
+	
+</beans>
+
