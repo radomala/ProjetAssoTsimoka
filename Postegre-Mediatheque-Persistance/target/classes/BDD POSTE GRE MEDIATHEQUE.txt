@@ -84,11 +84,38 @@ INSERT INTO MEMBRE (GROUPE,MAIL) VALUES ('user','fortier.for@lipn-paris13.fr');
 INSERT INTO MEMBRE (GROUPE,MAIL) VALUES ('user','dede.ran@lipn-paris13.fr');
 INSERT INTO MEMBRE (GROUPE,MAIL) VALUES ('empl','andre.ran@lipn-paris13.fr');
 
-{
-	"mail":"radomalalalalalalal@alteca.fr",
-	"motdepasse":"1234",
-	"nom":"radomalala",
-	"phone":"1234567",
-	"sexe":"M",
-	"adresse":"ffgfdgdfgf"
-}
+##############################################################################################################################""
+BD TSIMOKA
+
+-- Table: public.t_rubrique_rub
+
+-- DROP TABLE public.t_rubrique_rub;
+
+CREATE TABLE public.t_rubrique_rub
+(
+  rub_id integer NOT NULL DEFAULT nextval('t_rubrique_rub_rub_id_seq'::regclass), -- id technique du dossier ou formulaire.
+  rub_label character varying(100), -- nom de dossier ou formulaire.
+  rub_idparent numeric(4,0), -- colonne qui permet de connaitre le dossier parent
+  rub_datecreate timestamp without time zone, -- la date de creation du dossier
+  rub_usercreate character varying(60) NOT NULL,
+  rub_dossierorformulaire boolean NOT NULL DEFAULT false, -- pour differencier entre FORMULAIRE ET DOSSIER
+  rub_description character varying(500), -- la description du formuliare
+  rub_finishconfiguration character varying(60) NOT NULL DEFAULT 'encours'::character varying, -- pour savoir est ce que la configuration du formulaire est terminer ou pas
+  CONSTRAINT t_rubrique_rub_pkey PRIMARY KEY (rub_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.t_rubrique_rub
+  OWNER TO postgres;
+COMMENT ON TABLE public.t_rubrique_rub
+  IS 'Table de dossier ou arborescence.';
+COMMENT ON COLUMN public.t_rubrique_rub.rub_id IS 'id technique du dossier ou formulaire.';
+COMMENT ON COLUMN public.t_rubrique_rub.rub_label IS 'nom de dossier ou formulaire.';
+COMMENT ON COLUMN public.t_rubrique_rub.rub_idparent IS 'colonne qui permet de connaitre le dossier parent';
+COMMENT ON COLUMN public.t_rubrique_rub.rub_datecreate IS 'la date de creation du dossier';
+COMMENT ON COLUMN public.t_rubrique_rub.rub_dossierorformulaire IS 'pour differencier entre FORMULAIRE ET DOSSIER';
+COMMENT ON COLUMN public.t_rubrique_rub.rub_description IS 'la description du formuliare';
+COMMENT ON COLUMN public.t_rubrique_rub.rub_finishconfiguration IS 'pour savoir est ce que la configuration du formulaire est terminer ou pas';
+
+

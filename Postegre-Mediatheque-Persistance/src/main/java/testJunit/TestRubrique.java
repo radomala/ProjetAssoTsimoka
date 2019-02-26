@@ -23,7 +23,7 @@ public class TestRubrique {
 	public void testCreate() throws MediathequeException, ParseException {
 
 		RubriqueBean rub = new RubriqueBean();
-		rub.setRub_label("dd");
+		rub.setRub_label("kaka");
 		rub.setRub_id(100);
 
 		String s = "12/12/2017";
@@ -41,12 +41,33 @@ public class TestRubrique {
 	@Test
 	public void testeDelete() throws MediathequeException, ParseException {
 
-		iRubriqueDao.deleteRubrique(3);
+		iRubriqueDao.deleteRubriqueEntity(3);
 	}
 	
 	@Test
 	public void testeDeletebynom() throws MediathequeException, ParseException {
 
-		iRubriqueDao.deleteRubriqueByName("dd");
+		iRubriqueDao.deleteRubriqueTable("dd");
 	}
+	@Test
+	public void testUpdateRubrique() throws MediathequeException, ParseException {
+
+		iRubriqueDao.updateRubriqueTable(13, "dodaDDADA");
+		iRubriqueDao.updateRubriqueEntity(17, "dodamaNITRA");
+	}
+	
+	@Test
+	public void testGetListRubrique() throws MediathequeException, ParseException {
+
+		iRubriqueDao.getListRubriqueTable();
+		iRubriqueDao.getListRubriqueEntity();
+	}
+	
+	@Test
+	public void testGetRubrique() throws MediathequeException, ParseException {
+
+		iRubriqueDao.getRubriqueBeanTable(17);
+		iRubriqueDao.getRubriqueBeanEntity(17);
+	}
+	
 }
