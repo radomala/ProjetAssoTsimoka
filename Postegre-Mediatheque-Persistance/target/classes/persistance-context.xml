@@ -51,12 +51,19 @@
 	
 	
 
-	<!-- ********BEANS DAO********** -->
+	<!-- ********BEANS RUBRIQUE********** -->
 
-	<bean id="iRubriqueDao" class="postgre.mediatheque.entiteDao.RubriqueImpl">
+	<bean id="iRubriqueDao" class="postgre.mediatheque.entiteDao.RubriqueDao">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
-	<bean id="iMediaDao" class="postgre.mediatheque.entiteDao.MediaDaoImpl">
+	
+	 <bean id="iRubriqueMetier" class="postgre.mediatheque.metier.RubriqueMetierImpl">
+		<property name="iRubriqueDao" ref="iRubriqueDao"></property>
+	</bean>
+	
+	
+	
+	<!-- <bean id="iMediaDao" class="postgre.mediatheque.entiteDao.MediaDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
 
@@ -66,14 +73,14 @@
 
 	<bean id="iStockFilesDao" class="postgre.mediatheque.entiteDao.StockFilesDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory"></property>
-	</bean>
+	</bean> -->
 
 
 	<!-- ********BEANS METIER********** -->
 
     
 
-	<bean id="iMembreMetier" class="postgre.mediatheque.metier.MembreMetierImpl">
+	<!-- <bean id="iMembreMetier" class="postgre.mediatheque.metier.MembreMetierImpl">
 		<property name="iMembreDao" ref="iMembreDao"></property>
 		<property name="iUsers_rolesDao" ref="iUsers_rolesDao"></property>
 	</bean>
@@ -89,7 +96,7 @@
 
 	<bean id="iStockFilesMetier" class="postgre.mediatheque.metier.StockFilesMetierImpl">
 		<property name="iStockFilesDao" ref="iStockFilesDao"></property>
-	</bean>
+	</bean> -->
 
 
 	<!-- ********BEANS TRANSACTION ANDDRIVEN********** -->
