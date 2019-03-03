@@ -17,7 +17,7 @@ import postgre.mediatheque.entite.RubriqueBean;
 import postgre.mediatheque.util.MediathequeException;
 
 /**
- * @author rjbandriambololotomp
+ * @author rjbandriambololotomp.
  *
  */
 public class RubriqueDao implements IRubriqueDao {
@@ -107,7 +107,7 @@ public class RubriqueDao implements IRubriqueDao {
 	}
 
 	/*
-	 * mise a jour avec en utulisant la table
+	 * mise a jour avec en utulisant la table.
 	 */
 	public void updateRubriqueTable(long idRubrique, String newLabel) throws MediathequeException {
 
@@ -133,7 +133,7 @@ public class RubriqueDao implements IRubriqueDao {
 	}
 
 	/*
-	 * mise a jour en utulisant l' entité ou le beans Le plus gros avantage de la
+	 * mise a jour en utulisant l' entité ou le beans Le plus gros avantage de la.
 	 * mise en veille prolongée (HIBERNATE) est qu'elle fournit l'ORM (mapping
 	 * relationnel d'objet).
 	 */
@@ -155,11 +155,14 @@ public class RubriqueDao implements IRubriqueDao {
 		}
 
 	}
+	
 
 	/*
-	 * *
+	 * LISTE RUBRIQUE DANS MODULE ADMINISTRATION-RUBRIQUE.
 	 * 
 	 */
+	
+	
 	@SuppressWarnings("unchecked")
 	public List getListRubriqueTable() throws MediathequeException {
 
@@ -183,6 +186,30 @@ public class RubriqueDao implements IRubriqueDao {
 		}
 
 	}
+	
+	
+	
+	/* 
+	 
+	  SELECT
+      id_rub AS id,
+      label_rub AS label,
+      LOWER(label_rub) as lowerLabel,
+      id_parent_rub AS idparent,
+      isformulaire AS isFormulaire
+    FROM
+      t_rubrique_rub
+    where
+      (id_parent_rub is null and (:idParent is null OR :idParent ::numeric = -1))
+      or
+      (id_parent_rub is not null and id_parent_rub = :idParent ::numeric)
+    ORDER BY
+      isFormulaire ASC,
+      lowerLabel ASC
+	  
+	 */
+	
+	
 
 	/* 
 	 *  
