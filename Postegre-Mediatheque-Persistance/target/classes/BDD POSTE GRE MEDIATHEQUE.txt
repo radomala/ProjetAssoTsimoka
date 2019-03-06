@@ -93,7 +93,7 @@ BD TSIMOKA
 
 CREATE TABLE public.t_rubrique_rub
 (
-  rub_id integer NOT NULL DEFAULT nextval('t_rubrique_rub_rub_id_seq'::regclass), -- id technique du dossier ou formulaire.
+  rub_id Serial,
   rub_label character varying(100), -- nom de dossier ou formulaire.
   rub_idparent numeric(4,0), -- colonne qui permet de connaitre le dossier parent
   rub_datecreate timestamp without time zone, -- la date de creation du dossier

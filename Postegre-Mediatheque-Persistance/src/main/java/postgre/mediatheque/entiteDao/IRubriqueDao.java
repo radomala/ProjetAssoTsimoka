@@ -1,6 +1,7 @@
 package postgre.mediatheque.entiteDao;
 
 import java.util.List;
+import java.util.Map;
 
 import postgre.mediatheque.entite.RubriqueBean;
 import postgre.mediatheque.util.MediathequeException;
@@ -11,7 +12,7 @@ import postgre.mediatheque.util.MediathequeException;
  */
 public interface IRubriqueDao {
 	
-	public abstract void createRubrique(RubriqueBean rub)throws MediathequeException;
+	public abstract Map<String, Object> createRubrique(RubriqueBean rub)throws MediathequeException;
 	
 	public void deleteRubriqueEntity(long idRubrique) throws MediathequeException;
 	
