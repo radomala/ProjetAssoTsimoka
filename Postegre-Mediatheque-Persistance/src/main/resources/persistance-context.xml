@@ -15,6 +15,14 @@
 		<property name="initialSize" value="5" />
 		<property name="maxActive" value="20" />
 	</bean>
+	
+	<bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
+		<property name="dataSource" ref="dataSource" />
+		<property name="changeLog" value="classpath:changelog.xml" />
+
+		<!-- contexts specifies the runtime contexts to use. -->
+		<property name="contexts" value="test, production" />
+	</bean>
 
 
 	<bean id="sessionFactory"
@@ -33,23 +41,6 @@
 		</property>
 	</bean>
 
-	<bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
-		<property name="dataSource" ref="dataSource" />
-		<property name="changeLog" value="/db/changelog-master.xm" />
-
-		<!-- contexts specifies the runtime contexts to use. -->
-		<!-- <property name="contexts" value="test, production" /> -->
-	</bean>
-	
-	
-	
-	<!-- <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
-		<property name="dataSource" ref="DataSource" />
-		<property name="changeLog" value="src/main/java/de/twt_gmbh/spring4/database-changelog-master.xml" />
-	</bean>
-	 -->
-	
-	
 
 	<!-- ********BEANS RUBRIQUE********** -->
 
