@@ -1,5 +1,6 @@
 package postgre.mediatheque.metier;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +9,7 @@ import postgre.mediatheque.util.MediathequeException;
 
 public interface IRubriqueMetier {
 	
-	public abstract Map<String, Object> createRubrique(RubriqueBean rub)throws MediathequeException;
+	public abstract Map<String, Object> createRubrique(RubriqueBean rub)throws MediathequeException, IOException;
 	
 	public void deleteRubriqueEntity(long idRubrique) throws MediathequeException;
 	
@@ -22,9 +23,14 @@ public interface IRubriqueMetier {
 	
 	public List getListRubriqueEntity() throws MediathequeException;
 	
+	public List getListRubriqueDissierOrFormulaire(boolean quoi) throws MediathequeException;
+	
 	public Object getRubriqueBeanTable(long idRubrique)throws MediathequeException;
 	
 	public RubriqueBean getRubriqueBeanEntity(long idRubrique)throws MediathequeException;
+	
+	public RubriqueBean getRubriqueBeanEntityByNom(String nom)throws MediathequeException, IOException;
+	
 
 
 }

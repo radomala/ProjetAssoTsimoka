@@ -95,7 +95,7 @@ CREATE TABLE public.t_rubrique_rub
 (
   rub_id Serial,
   rub_label character varying(100), -- nom de dossier ou formulaire.
-  rub_idparent numeric(4,0), -- colonne qui permet de connaitre le dossier parent
+  rub_idparent numercic, -- colonne qui permet de connaitre le dossier parent
   rub_datecreate timestamp without time zone, -- la date de creation du dossier
   rub_usercreate character varying(60) NOT NULL,
   rub_dossierorformulaire boolean NOT NULL DEFAULT false, -- pour differencier entre FORMULAIRE ET DOSSIER

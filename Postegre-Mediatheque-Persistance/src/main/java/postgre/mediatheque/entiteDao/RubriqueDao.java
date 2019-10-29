@@ -1,5 +1,6 @@
 package postgre.mediatheque.entiteDao;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,10 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import postgre.mediatheque.entite.RubriqueBean;
 import postgre.mediatheque.util.MediathequeException;
@@ -27,16 +32,12 @@ public class RubriqueDao implements IRubriqueDao {
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
-	
-	
-	
-	
-	
-	private static final String SUCCESS  = "success";
 
-	public Map <String, Object> createRubrique(RubriqueBean rub) throws MediathequeException {
-		
-		Map <String, Object> message = new HashMap<String, Object>();
+	private static final String SUCCESS = "success";
+
+	public Map<String, Object> createRubrique(RubriqueBean rub) throws MediathequeException {
+
+		Map<String, Object> message = new HashMap<String, Object>();
 
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
@@ -45,16 +46,16 @@ public class RubriqueDao implements IRubriqueDao {
 			session.save(rub);
 			tx.commit();
 			session.close();
-			
+
 			message.put(SUCCESS, true);
 
-		} catch (HibernateException e) {
+		} catch (Exception e) {
 			tx.rollback();
 			session.close();
-			message.put(SUCCESS, true);
-			throw new MediathequeException("erreur d'ajout DOSSIER:FORMULAIRE" + rub.getRub_label());
+			message.put(SUCCESS, false);
+			throw new MediathequeException(" ERROR ADD DOSSIER : " + rub.getLabel());
 		}
-		
+
 		return message;
 
 	}
@@ -144,7 +145,7 @@ public class RubriqueDao implements IRubriqueDao {
 
 		try {
 			RubriqueBean rubriqueBean = (RubriqueBean) session.get(RubriqueBean.class, idRubrique);
-			rubriqueBean.setRub_label(newLabel);
+			rubriqueBean.setLabel(newLabel);
 			session.update(rubriqueBean);
 			tx.commit();
 			session.close();
@@ -155,14 +156,12 @@ public class RubriqueDao implements IRubriqueDao {
 		}
 
 	}
-	
 
 	/*
 	 * LISTE RUBRIQUE DANS MODULE ADMINISTRATION-RUBRIQUE.
 	 * 
 	 */
-	
-	
+
 	@SuppressWarnings("unchecked")
 	public List getListRubriqueTable() throws MediathequeException {
 
@@ -184,32 +183,7 @@ public class RubriqueDao implements IRubriqueDao {
 			session.close();
 			throw new MediathequeException("eureur getListRubriqueTable");
 		}
-
 	}
-	
-	
-	
-	/* 
-	 
-	  SELECT
-      id_rub AS id,
-      label_rub AS label,
-      LOWER(label_rub) as lowerLabel,
-      id_parent_rub AS idparent,
-      isformulaire AS isFormulaire
-    FROM
-      t_rubrique_rub
-    where
-      (id_parent_rub is null and (:idParent is null OR :idParent ::numeric = -1))
-      or
-      (id_parent_rub is not null and id_parent_rub = :idParent ::numeric)
-    ORDER BY
-      isFormulaire ASC,
-      lowerLabel ASC
-	  
-	 */
-	
-	
 
 	/* 
 	 *  
@@ -258,8 +232,9 @@ public class RubriqueDao implements IRubriqueDao {
 
 	}
 
-	public RubriqueBean getRubriqueBeanEntity(long idRubrique) throws MediathequeException {
+	public RubriqueBean getRubriqueBeanEntity(String idRubrique) throws MediathequeException {
 
+	//	long id = Long.parseLong(idRubrique);
 		RubriqueBean rubriqueBean = new RubriqueBean();
 
 		Session session = sessionFactory.openSession();
@@ -270,8 +245,194 @@ public class RubriqueDao implements IRubriqueDao {
 		if (rubriqueBean.equals(null)) {
 			System.out.println("null");
 		}
-
+ 
 		return rubriqueBean;
 	}
 
+
+    public List<RubriqueBean> getRubriquesByParentId(String idForm) {
+    	
+    	Session session = sessionFactory.openSession();
+    	Transaction tx = session.beginTransaction();
+    	
+    	String idParent = idForm.equals("root") ? "-1" : idForm;
+    	
+		List<RubriqueBean> rubriqueBeans = new ArrayList<RubriqueBean>();
+		
+		String sql = "SELECT rub_id AS id, rub_label AS label, LOWER(rub_label) as lowerLabel, rub_idparent AS idparent,rub_dossierOrformulaire AS dossierOrformulaire FROM t_rubrique_rub where (rub_idparent is null and (:idParent is null OR :idParent = -1)) or (id_parent_rub is not null and id_parent_rub = :idParent)";
+
+		try {
+
+			SQLQuery query = session.createSQLQuery(sql);
+			// IMPORTANT
+			query.addEntity(RubriqueBean.class);
+			rubriqueBeans = query.list();
+			return rubriqueBeans;
+
+		} catch (HibernateException e) {
+			session.close();
+		}
+		return rubriqueBeans;
+    }
+
+	public List<RubriqueBean> getRubriqueParentAndFils(String idForm, String listRubriques) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object getRubriqueBeanTable(String idRubrique) throws MediathequeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List getListRubriqueTableNoIdParent() throws MediathequeException {
+		Session session = sessionFactory.openSession();
+		Transaction tx = session.beginTransaction();
+		List<RubriqueBean> rubriqueBeans = new ArrayList<RubriqueBean>();
+		// String sql = "SELECT first_name, salary FROM EMPLOYEE";
+		String sql = "SELECT * FROM t_rubrique_rub where rub_idparent is null";
+
+		try {
+			SQLQuery query = session.createSQLQuery(sql);
+			// IMPORTANT
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			rubriqueBeans = query.list();
+
+			return rubriqueBeans;
+
+		} catch (HibernateException e) {
+			session.close();
+			throw new MediathequeException("eureur getListRubriqueTable");
+		}
 }
+	
+	public List getListRubriqueTableAvecIdParent() throws MediathequeException {
+		Session session = sessionFactory.openSession();
+		Transaction tx = session.beginTransaction();
+		List<RubriqueBean> rubriqueBeans = new ArrayList<RubriqueBean>();
+	
+		String sql = "SELECT * FROM t_rubrique_rub where rub_idparent is not null";
+
+		try {
+			SQLQuery query = session.createSQLQuery(sql);
+			// IMPORTANT
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			rubriqueBeans = query.list();
+
+			return rubriqueBeans;
+
+		} catch (HibernateException e) {
+			session.close();
+			throw new MediathequeException("eureur getListRubriqueTable");
+		}
+}
+
+	public List getListRubriqueDissierOrFormulaire(boolean quoi) throws MediathequeException {
+		
+		Session session = sessionFactory.openSession();
+		Transaction tx = session.beginTransaction();
+		List<RubriqueBean> rubriqueBeans = new ArrayList<RubriqueBean>();
+		String sql = "";
+		
+		if(!quoi) {
+			sql = "SELECT * FROM t_rubrique_rub where rub_dossierorformulaire = false";
+		} else {
+			sql = "SELECT * FROM t_rubrique_rub where rub_dossierorformulaire = true";
+		}
+	
+
+		try {
+			SQLQuery query = session.createSQLQuery(sql);
+			// IMPORTANT
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			rubriqueBeans = query.list();
+			return rubriqueBeans;
+
+		} catch (HibernateException e) {
+			session.close();
+			throw new MediathequeException("eureur getListRubriqueTable");
+		}
+	}
+
+	public RubriqueBean getRubriqueBeanEntityByNom(String nom) throws MediathequeException, IOException {
+
+		Session session = sessionFactory.openSession();
+		Transaction tx = session.beginTransaction();
+		RubriqueBean rubriqueBean = new RubriqueBean();
+		
+		 ObjectMapper objectMapper = new ObjectMapper();
+		String sql = "SELECT * FROM t_rubrique_rub where rub_label = :label";
+
+		try {
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.setParameter("label", nom);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			//return query.uniqueResult();
+			
+			 System.out.println(query.uniqueResult());
+			 
+				
+			 // JSON à l'objet Java
+	      
+			 rubriqueBean = objectMapper.readValue(""+query.uniqueResult(), RubriqueBean.class);
+			 System.out.println( rubriqueBean.toString());
+			 
+			return null;
+
+		} catch (HibernateException e) {
+			session.close();
+			throw new MediathequeException("erreur");
+		}
+
+	
+		
+	
+	}
+}
+
+/* 
+ 
+ private long rub_id;
+	@Column(name="rub_label")
+	private String  rub_label;
+	@Column(name="rub_idparent")
+	private long rub_idparent;
+	@Column(name="rub_datecreate")
+	private Date rub_datecreate;
+	@Column(name="rub_usercreate")
+	private String  rub_usercreate;
+	@Column(name="rub_dossierOrformulaire")
+	private boolean  rub_dossierOrformulaire;
+	@Column(name="rub_description")
+	private String rub_description;
+	@Column(name="rub_finishconfiguration")
+	private String rub_finishconfiguration;
+	
+	
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+SELECT
+id_rub AS id,
+label_rub AS label,
+LOWER(label_rub) as lowerLabel,
+id_parent_rub AS idparent,
+isformulaire AS isFormulaire
+FROM
+t_rubrique_rub
+where
+(id_parent_rub is null and (:idParent is null OR :idParent ::numeric = -1))
+or
+(id_parent_rub is not null and id_parent_rub = :idParent ::numeric)
+ORDER BY
+isFormulaire ASC,
+lowerLabel ASC
+
+*/
+

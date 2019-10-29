@@ -19,24 +19,21 @@ public class TestRubriqueMetier {
 	IRubriqueMetier iRubriqueMetier = (IRubriqueMetier) bfa.getBean("iRubriqueMetier");
 	
 	
-	@Test
-	public void testCreateRubrique() throws MediathequeException, ParseException {
-
-		RubriqueBean rub = new RubriqueBean();
-		rub.setRub_label("metier");
-		rub.setRub_id(100);
-
-		String s = "12/12/2017";
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYyy");
-		Date d = sdf.parse(s);
-		rub.setRub_datecreate(d);
-		rub.setRub_usercreate("dd");
-		rub.setRub_dossierOrformulaire(true);
-		rub.setRub_description("ff");
-		rub.setRub_finishconfiguration("ddd");
-
-		iRubriqueMetier.createRubrique(rub);
-	}
+	/*
+	 * @Test public void testCreateRubrique() throws MediathequeException,
+	 * ParseException {
+	 * 
+	 * RubriqueBean rub = new RubriqueBean(); rub.setRub_label("metier");
+	 * rub.setRub_id(100);
+	 * 
+	 * String s = "12/12/2017"; SimpleDateFormat sdf = new
+	 * SimpleDateFormat("dd/MM/YYyy"); Date d = sdf.parse(s);
+	 * rub.setRub_datecreate(d); rub.setRub_usercreate("dd");
+	 * rub.setRub_dossierOrformulaire(true); rub.setRub_description("ff");
+	 * rub.setRub_finishconfiguration("ddd");
+	 * 
+	 * iRubriqueMetier.createRubrique(rub); }
+	 */
 	
 	
 }
