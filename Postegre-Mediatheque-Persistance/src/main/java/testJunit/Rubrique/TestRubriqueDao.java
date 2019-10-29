@@ -3,6 +3,7 @@ package testJunit.Rubrique;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Test;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -22,8 +23,8 @@ public class TestRubriqueDao {
 	public void testCreate() throws MediathequeException, ParseException {
 
 		RubriqueBean rub = new RubriqueBean();
-		rub.setRub_label("kaka");
-		rub.setRub_id(100);
+		rub.setLabel("kaka");
+	//	rub.setRub_id(100);
 
 		String s = "12/12/2017";
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYyy");
@@ -59,15 +60,20 @@ public class TestRubriqueDao {
 	@Test
 	public void testGetListRubrique() throws MediathequeException, ParseException {
 
-		iRubriqueDao.getListRubriqueTable();
-		iRubriqueDao.getListRubriqueEntity();
+		List rub = iRubriqueDao.getListRubriqueTable();
+		 System.out.println("rub***************************************************************************** " +rub.get(1)); 
+		 List rub2 = iRubriqueDao.getListRubriqueEntity();
+		 
+		 System.out.println("rub2***************************************************************************** " +rub.get(1)); 
 	}
 
 	@Test
 	public void testGetRubrique() throws MediathequeException, ParseException {
 
 		iRubriqueDao.getRubriqueBeanTable(2);
-		iRubriqueDao.getRubriqueBeanEntity(2);
+	//	iRubriqueDao.getRubriqueBeanEntity("2");
 	}
+	
+	
 
 }
